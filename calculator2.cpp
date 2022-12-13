@@ -10,7 +10,7 @@ g++ calculator2.cpp -o ../bin/calc
  * + 
  * 
  * fonction test :
-test IsANumber FAILED : score=14
+test IsANumber SUCCEEDED
 test IsAClassicOperator SUCCEEDED
 test IsASpecialOperator SUCCEEDED
 test split_nb SUCCEEDED
@@ -33,6 +33,7 @@ test split_op FAILED : op size=5
 =>+
 test to_double SUCCEEDED
 test fact SUCCEEDED
+test manage_pow FAILED : 9
 test make_correctly_expression FAILED : =>
 test ressearch_parenthese SUCCEEDED
 terminate called after throwing an instance of 'std::out_of_range'
@@ -78,7 +79,7 @@ int main(int argc, char const *argv[])
             ++score;
         }
     }
-    if (score==12)
+    if (score==14)
     {
         cout<<"test IsANumber SUCCEEDED" <<endl;
     }else{
@@ -151,13 +152,14 @@ int main(int argc, char const *argv[])
     }
     
     //TEST to_double
-    to_double("75",&tmp_db);
+    double tmp(105);
+    to_double(to_string(tmp),&tmp_db);
     tmp_db-=2;
-    if (tmp_db==73)
+    if (tmp_db==tmp-2)
     {
         cout<<"test to_double SUCCEEDED" <<endl;
     }else{
-        cout<<"test to_double FAILED : 75-2="<<tmp_db<<endl;
+        cout<<"test to_double FAILED : "<<tmp<<"-2="<<tmp_db<<endl;
     }
 
     //TEST fact
@@ -352,12 +354,28 @@ bool split_op(vector<char>* op,string chaine){
 }
 
 bool to_double(string chaine,double* nb){
-    double lengh;
-    double tmp(0);
+    double length(0),tmp(0);
     if (chaine.empty())
     {
         return false;
     }
+    //delete useless 0 at the begin and the end of the chaine
+    int ind(0);
+    while (chaine.at(ind)=='0')
+    {
+        chaine.erase(chaine.begin());
+        ++ind;
+    }
+    ind=chaine.size()-1;
+    while(chaine.at(ind)=='0')
+    {
+        chaine.erase(chaine.begin()+ind);
+        --ind;
+    }
+    if(chaine.at(ind)=='.'){
+        chaine.erase(chaine.begin()+ind);
+    }
+
     for (size_t i = 0; i < chaine.size(); i++)
     {
         //check elt is accepted char
@@ -368,45 +386,43 @@ bool to_double(string chaine,double* nb){
         //get integer part length
         if (chaine.at(i)=='.')
         {
-            lengh=i;
+            length=i;
         }
-        
     }
-    
     //convert the string
     for (size_t i = 0; i < chaine.size(); i++)
     {
         switch (chaine.at(i))
         {
         case '0':
-            tmp*=10;
+            //nothing to do
             break;
         case '1':
-            tmp+=1*pow(10,chaine.size()-1-i-lengh);
+            tmp+=1*pow(10,chaine.size()-1-i-length);
             break;
         case '2':
-            tmp+=2*pow(10,chaine.size()-1-i-lengh);
+            tmp+=2*pow(10,chaine.size()-1-i-length);
             break;
         case '3':
-            tmp+=3*pow(10,chaine.size()-1-i-lengh);
+            tmp+=3*pow(10,chaine.size()-1-i-length);
             break;
         case '4':
-            tmp+=4*pow(10,chaine.size()-1-i-lengh);
+            tmp+=4*pow(10,chaine.size()-1-i-length);
             break;
         case '5':
-            tmp+=5*pow(10,chaine.size()-1-i-lengh);
+            tmp+=5*pow(10,chaine.size()-1-i-length);
             break;
         case '6':
-            tmp+=6*pow(10,chaine.size()-1-i-lengh);
+            tmp+=6*pow(10,chaine.size()-1-i-length);
             break;
         case '7':
-            tmp+=7*pow(10,chaine.size()-1-i-lengh);
+            tmp+=7*pow(10,chaine.size()-1-i-length);
             break;
         case '8':
-            tmp+=8*pow(10,chaine.size()-1-i-lengh);
+            tmp+=8*pow(10,chaine.size()-1-i-length);
             break;
         case '9':
-            tmp+=9*pow(10,chaine.size()-1-i-lengh);
+            tmp+=9*pow(10,chaine.size()-1-i-length);
             break;
         }
     }
@@ -414,7 +430,6 @@ bool to_double(string chaine,double* nb){
     //retour de convertion reussi
     return true;
 }
-
 
 string make_correctly_expression(string exp){
     return exp;
