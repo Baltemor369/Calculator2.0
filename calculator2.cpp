@@ -6,38 +6,61 @@ g++ calculator2.cpp -o ../bin/calc
 /**
  * TASK LIST :
  * + make_correctly_expression
- * + transformer en fonctin recursive le calcul des ^ ! #
- * + 
+ * + make function for  ^ ! #
+ * + add verification of entry in every function
  * 
  * fonction test :
 test IsANumber SUCCEEDED
 test IsAClassicOperator SUCCEEDED
 test IsASpecialOperator SUCCEEDED
 test split_nb SUCCEEDED
-=>100
-=>5
-=>20.5
-=>3
-=>4
-=>5
-=>2
-=>60.2
-=>7
-=>8
-=>9
-test split_op FAILED : op size=5
+test split_op FAILED : op size=39
 =>1
 =>0
 =>^
 =>5
 =>+
+=>(
+=>!
+=>(
+=>2
+=>.
+=>5
+=>-
+=>!
+=>!
+=>3
+=>)
+=>+
+=>#
+=>4
+=>)
+=>*
+=>5
+=>^
+=>2
+=>/
+=>(
+=>#
+=>6
+=>.
+=>2
+=>*
+=>!
+=>7
+=>)
+=>+
+=>!
+=>8
+=>+
+=>9
 test to_double SUCCEEDED
 test fact SUCCEEDED
 test manage_pow FAILED : 9
 test make_correctly_expression FAILED : =>
 test ressearch_parenthese SUCCEEDED
 terminate called after throwing an instance of 'std::out_of_range'
-  what():  vector::_M_range_check: __n (which is 6) >= this->size() (which is 6)
+  what():  vector::_M_range_check: __n (which is 6) >= this->size() (which is 3)
  * 
  * op : + - * /  ! ^ # 
  * english notation : 128.51 . => decimal not ,
@@ -125,10 +148,6 @@ int main(int argc, char const *argv[])
     if (nb.size()==11)
     {
         cout<<"test split_nb SUCCEEDED" <<endl;
-        for (size_t i = 0; i < nb.size(); i++)
-        {
-            cout<<"=>"<<nb.at(i)<<endl;
-        }
     }else{
         cout<<"test split_nb FAILED : nb size="<<nb.size()<<endl;
         for (size_t i = 0; i < nb.size(); i++)
@@ -140,7 +159,7 @@ int main(int argc, char const *argv[])
     //TEST split_op
     vector<char> op;
     split_op(&op,test);
-    if (op.size()==16)
+    if (op.size()==17)
     {
         cout<<"test split_op SUCCEEDED" <<endl;
     }else{
@@ -152,7 +171,7 @@ int main(int argc, char const *argv[])
     }
     
     //TEST to_double
-    double tmp(105);
+    double tmp(10);
     to_double(to_string(tmp),&tmp_db);
     tmp_db-=2;
     if (tmp_db==tmp-2)
@@ -340,12 +359,7 @@ bool split_nb(vector<double>* Vnb,string chaine){
 bool split_op(vector<char>* op,string chaine){
     for (size_t i = 0; i < chaine.size(); i++)
     {
-        //check elt is a accepted char
-        if (!(IsANumber(chaine.at(i)) or IsAClassicOperator(chaine.at(i)) or IsASpecialOperator(chaine.at(i)) or chaine.at(i)=='.'))
-        {
-            return false;
-        }
-        if (!(IsANumber(chaine.at(i)) and chaine.at(i)=='.'))
+        if (IsAClassicOperator(chaine.at(i)) or IsASpecialOperator(chaine.at(i)))
         {
             op->push_back(chaine.at(i));
         }
