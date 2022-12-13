@@ -1,6 +1,6 @@
 /*
 compile command :
-g++ calculator2.cpp -o ../bin/calc
+g++ .\fct_error.cpp .\calculator2.cpp -o ..\bin\calc.exe
 */
 
 /**
@@ -14,46 +14,7 @@ test IsANumber SUCCEEDED
 test IsAClassicOperator SUCCEEDED
 test IsASpecialOperator SUCCEEDED
 test split_nb SUCCEEDED
-test split_op FAILED : op size=39
-=>1
-=>0
-=>^
-=>5
-=>+
-=>(
-=>!
-=>(
-=>2
-=>.
-=>5
-=>-
-=>!
-=>!
-=>3
-=>)
-=>+
-=>#
-=>4
-=>)
-=>*
-=>5
-=>^
-=>2
-=>/
-=>(
-=>#
-=>6
-=>.
-=>2
-=>*
-=>!
-=>7
-=>)
-=>+
-=>!
-=>8
-=>+
-=>9
+test split_op SUCCEEDED
 test to_double SUCCEEDED
 test fact SUCCEEDED
 test manage_pow FAILED : 9
@@ -71,6 +32,7 @@ terminate called after throwing an instance of 'std::out_of_range'
 #include <vector>
 #include <string>
 #include <cmath>
+#include "../fct_4_error/fct_error.hpp"
 
 using namespace std;
 
@@ -81,7 +43,7 @@ bool split_nb(vector<double>* Vnb,string chaine);
 bool split_op(vector<char>* op,string chaine);
 bool to_double(string chaine,double* nb);
 double fact(double nb);
-double manage_pow(vector<double> *nb,vector<char> *op,int index);
+void manage_pow(vector<double> *nb,vector<char> *op,int index);
 
 string make_correctly_expression(string exp);
 string ressearch_parenthese(string chaine);
@@ -200,12 +162,12 @@ int main(int argc, char const *argv[])
     vchar.push_back('^');
     vchar.push_back('^');
     vchar.push_back('^');
-    tmp_db=manage_pow(&vnb,&vchar,0);
-    if (tmp_db==43046721)
+    manage_pow(&vnb,&vchar,0);
+    if (vnb.at(0)==43046721)
     {
         cout<<"test manage_pow SUCCEEDED" <<endl;
     }else{
-        cout<<"test manage_pow FAILED : "<<tmp_db<<endl;
+        cout<<"test manage_pow FAILED : "<<vnb.at(0)<<endl;
     }
 
     //TEST make_correctly_expression
@@ -560,14 +522,24 @@ double fact(double nb){
     return buff;
 }
 
-double manage_pow(vector<double> *nb,vector<char> *op,int index){
-    double result(0);
-    if (op->at(index)+1=='^')
+void manage_pow(vector<double> *nb,vector<char> *op,int index){
+    print(0);
+    if (index<op->size()-1)
     {
-        return pow(nb->at(index),manage_pow(nb,op,index+1));
-    }else{
-        return pow(nb->at(index),nb->at(index+1));
+        if (op->at(index+1)=='^')
+        {
+            manage_pow(nb,op,index+1);
+        }
     }
+    for (size_t i = 0; i < nb->size(); i++)
+    {
+        cout<<"=>"<<nb->at(i)<<endl;;
+    }
+    
+    print(1);
+    nb->at(index)=pow(nb->at(index),nb->at(index+1));
+    nb->erase(nb->begin()+index+1);
+    op->erase(op->begin()+index);
 }
 
 /*
