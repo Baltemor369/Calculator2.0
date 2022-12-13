@@ -157,9 +157,7 @@ int main(int argc, char const *argv[])
     vnb.push_back(3);
     vnb.push_back(2);
     vnb.push_back(4);
-    vnb.push_back(2);
     vector<char> vchar;
-    vchar.push_back('^');
     vchar.push_back('^');
     vchar.push_back('^');
     manage_pow(&vnb,&vchar,0);
@@ -523,7 +521,6 @@ double fact(double nb){
 }
 
 void manage_pow(vector<double> *nb,vector<char> *op,int index){
-    print(0);
     if (index<op->size()-1)
     {
         if (op->at(index+1)=='^')
@@ -531,20 +528,7 @@ void manage_pow(vector<double> *nb,vector<char> *op,int index){
             manage_pow(nb,op,index+1);
         }
     }
-    for (size_t i = 0; i < nb->size(); i++)
-    {
-        cout<<"=>"<<nb->at(i)<<endl;;
-    }
-    
-    print(1);
     nb->at(index)=pow(nb->at(index),nb->at(index+1));
     nb->erase(nb->begin()+index+1);
     op->erase(op->begin()+index);
 }
-
-/*
-if (!(IsANumber(chaine.at(i)) or IsAClassicOperator(chaine.at(i)) or IsASpecialOperator(chaine.at(i)) or chaine.at(i)=='.'))
-        {
-            return false;
-        }
-*/
