@@ -44,6 +44,7 @@ bool split_op(vector<char>* op,string chaine);
 bool to_double(string chaine,double* nb);
 double fact(double nb);
 void manage_pow(vector<double> *nb,vector<char> *op,int index);
+void manage_fact(vector<double> *nb,vector<char> *op,int index);
 
 string make_correctly_expression(string exp);
 string ressearch_parenthese(string chaine);
@@ -160,13 +161,31 @@ int main(int argc, char const *argv[])
     vector<char> vchar;
     vchar.push_back('^');
     vchar.push_back('^');
+    //
     manage_pow(&vnb,&vchar,0);
-    if (vnb.at(0)==43046721)
+    if (vnb.at(0)==pow(3,pow(2,4)))
     {
         cout<<"test manage_pow SUCCEEDED" <<endl;
     }else{
         cout<<"test manage_pow FAILED : "<<vnb.at(0)<<endl;
     }
+    vnb.clear();
+    vchar.clear();
+
+    //TEST manage_fact
+    vnb.push_back(3);
+    vchar.push_back('!');
+    vchar.push_back('!');
+    //"!!3 => !(2*3)=!6=2*3*4*5*6=720"
+    breakpoint(1);
+    manage_fact(&vnb,&vchar,0);
+    if (vnb.at(0)==720)
+    {
+        cout<<"test manage_fact SUCCEEDED" <<endl;
+    }else{
+        cout<<"test manage_fact FAILED : "<<vnb.at(0)<<endl;
+    }
+    
 
     //TEST make_correctly_expression
     string exp("");
@@ -453,9 +472,7 @@ bool calculator(string exp,double *buff){
     {
         if (op.at(i)=='^')
         {
-            nb.at(i)=pow(nb.at(i),nb.at(i+1));
-            nb.erase(nb.begin()+i+1);
-            op.erase(op.begin()+i);
+            manage_pow(&nb,&op,i);
             i-=1;
         }else if (op.at(i)=='!')
         {
@@ -532,3 +549,17 @@ void manage_pow(vector<double> *nb,vector<char> *op,int index){
     nb->erase(nb->begin()+index+1);
     op->erase(op->begin()+index);
 }
+
+double manage_fact(double nb,vector<char> *op,int index){
+    double result(0);
+    if (index<op->size()-1)
+    {
+        if (op->at(index+1)=='!')
+        {
+            result=manage_fact(nb,op,index+1);
+        }
+    }
+    result+=fact(nb);
+    op->erase(op->begin()+index);
+}
+
