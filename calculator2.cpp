@@ -1,6 +1,7 @@
 /*
-compile command :
-g++ .\fct_error.cpp .\calculator2.cpp -o ..\bin\calc.exe
+location : .\calculator\src\
+compile command : 
+g++ ..\fct_4_error\fct_error.cpp .\calculator2.cpp -o ..\bin\calc.exe
 */
 
 /**
@@ -17,14 +18,18 @@ test split_nb SUCCEEDED
 test split_op SUCCEEDED
 test to_double SUCCEEDED
 test fact SUCCEEDED
-test manage_pow FAILED : 9
+test manage_pow SUCCEEDED
+breakpoint 1
+#0
+#6
+breakpoint 2
+test manage_fact FAILED : 12
 test make_correctly_expression FAILED : =>
 test ressearch_parenthese SUCCEEDED
-terminate called after throwing an instance of 'std::out_of_range'
-  what():  vector::_M_range_check: __n (which is 6) >= this->size() (which is 3)
+test calculator FAILED : 10^5+(!(2.5-!!3)+#4)*5^2/(#6.2*!7)+!8+9=409781
  * 
  * op : + - * /  ! ^ # 
- * english notation : 128.51 . => decimal not ,
+ * english notation : 128.51 
 */
 
 #include <iostream>
@@ -44,7 +49,7 @@ bool split_op(vector<char>* op,string chaine);
 bool to_double(string chaine,double* nb);
 double fact(double nb);
 void manage_pow(vector<double> *nb,vector<char> *op,int index);
-void manage_fact(vector<double> *nb,vector<char> *op,int index);
+double manage_fact(double nb,vector<char> *op,int index);
 
 string make_correctly_expression(string exp);
 string ressearch_parenthese(string chaine);
@@ -145,8 +150,8 @@ int main(int argc, char const *argv[])
     }
 
     //TEST fact
-    tmp_db=fact(5);
-    if (tmp_db==120)
+    tmp_db=fact(6);
+    if (tmp_db==720)
     {
         cout<<"test fact SUCCEEDED" <<endl;
     }else{
@@ -173,17 +178,15 @@ int main(int argc, char const *argv[])
     vchar.clear();
 
     //TEST manage_fact
-    vnb.push_back(3);
     vchar.push_back('!');
     vchar.push_back('!');
     //"!!3 => !(2*3)=!6=2*3*4*5*6=720"
-    breakpoint(1);
-    manage_fact(&vnb,&vchar,0);
-    if (vnb.at(0)==720)
+    tmp_db = manage_fact(5,&vchar,0);
+    if (tmp_db==fact(fact(5)))
     {
         cout<<"test manage_fact SUCCEEDED" <<endl;
     }else{
-        cout<<"test manage_fact FAILED : "<<vnb.at(0)<<endl;
+        cout<<"test manage_fact FAILED : "<<tmp_db<<endl;
     }
     
 
@@ -550,16 +553,12 @@ void manage_pow(vector<double> *nb,vector<char> *op,int index){
     op->erase(op->begin()+index);
 }
 
+//!!3
 double manage_fact(double nb,vector<char> *op,int index){
-    double result(0);
-    if (index<op->size()-1)
+    if (index<op->size()-1 and op->at(index+1)=='!')
     {
-        if (op->at(index+1)=='!')
-        {
-            result=manage_fact(nb,op,index+1);
-        }
+        return fact(manage_fact(nb,op,index+1));
     }
-    result+=fact(nb);
     op->erase(op->begin()+index);
+    return fact(nb);    
 }
-
