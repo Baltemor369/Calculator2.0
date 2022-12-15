@@ -58,7 +58,7 @@ int main(int argc, char const *argv[])
     string tmp_str;
     
     //TEST IsANumber
-    string test("10^5+(!(2.5-!!3)+#4)*5^2/(#6.2*!7)+!8+9");
+    string test("10^3+(!(2.5-!!3)+#4)*5^2/(#6.2*!7)+!8+9");
     int score(0);
     for (int i = 0; i < test.size(); i++)
     {
@@ -109,8 +109,8 @@ int main(int argc, char const *argv[])
 
     //TEST split_nb
     vector<double> nb;
-    split_nb(&nb,test);
-    if (nb.size()==11)
+    split_nb(&nb,"2.5-!!3");
+    if (nb.size()==2)
     {
         cout<<"test split_nb SUCCEEDED" <<endl;
     }else{
@@ -136,8 +136,8 @@ int main(int argc, char const *argv[])
     }
     
     //TEST to_double
-    double tmp(10);
-    to_double(&tmp_db,to_string(tmp));
+    double tmp(010.50);
+    to_double(&tmp_db,"0000"+to_string(tmp)+"00");
     tmp_db-=2;
     if (tmp_db==tmp-2)
     {
@@ -219,7 +219,6 @@ int main(int argc, char const *argv[])
     
     return 0;
 }
-
 
 bool IsANumber(char c){
     switch (c)
@@ -357,7 +356,6 @@ bool to_double(double* db,string str){
     while (str.at(ind)=='0')
     {
         str.erase(str.begin());
-        ++ind;
     }
     ind=str.size()-1;
     while(str.at(ind)=='0')
@@ -371,11 +369,6 @@ bool to_double(double* db,string str){
 
     for (size_t i = 0; i < str.size(); i++)
     {
-        //check elt is accepted char
-        if (!(IsANumber(str.at(i)) or str.at(i)=='.'))
-        {
-            return false;
-        }
         //get integer part length
         if (str.at(i)=='.')
         {
@@ -416,6 +409,9 @@ bool to_double(double* db,string str){
             break;
         case '9':
             tmp+=9*pow(10,str.size()-1-i-length);
+            break;
+        case '.':
+            --length;
             break;
         }
     }
@@ -489,13 +485,8 @@ bool calculator(string exp,double *buff){
     exp=make_correctly_expression(exp);
     string exp_new;
     exp_new=ressearch_parenthese(exp);
-    cout<<"exp: "<<exp<<endl;
-    cout<<"exp_new: "<<exp_new<<endl;
     if(exp!=exp_new)
     {
-        cout<<"find["<<exp.find(exp_new)<<"]"<<exp.at(exp.find(exp_new))<<endl;
-        cout<<"size: "<<exp_new.size()<<endl;
-        cout<<"result :"<<to_string(calculator(exp_new,buff))<<"||"<<buff<<endl;
         exp.replace(exp.find(exp_new)-1, exp_new.size()+2, to_string(calculator(exp_new,buff)));
     }
     
@@ -509,16 +500,16 @@ bool calculator(string exp,double *buff){
         if (op.at(i)=='^')
         {
             manage_pow(&nb,&op,i);
-            i-=1;
+            i-=0;
         }else if (op.at(i)=='!')
         {
             nb.at(i)=manage_fact(nb.at(i),&op,i);
-            i-=1;
+            i-0;
         }else if (op.at(i)=='#')
         {
             nb.at(i)=sqrt(nb.at(i));
             op.erase(op.begin()+i);
-            i-=1;
+            i-=0;
         }
     }
     for (size_t i = 0; i < op.size(); i++)
