@@ -9,6 +9,7 @@ g++ ..\fct_4_error\fct_error.cpp .\calculator2.cpp -o ..\bin\calc.exe
  * + make_correctly_expression
  * + make function for  ^ ! #
  * + add verification of entry in every function
+ * + make to_double more global add convert char=>double int=>double etc
  * 
  * fonction test :
 test IsANumber SUCCEEDED
@@ -19,11 +20,7 @@ test split_op SUCCEEDED
 test to_double SUCCEEDED
 test fact SUCCEEDED
 test manage_pow SUCCEEDED
-breakpoint 1
-#0
-#6
-breakpoint 2
-test manage_fact FAILED : 12
+test manage_fact SUCCEEDED
 test make_correctly_expression FAILED : =>
 test ressearch_parenthese SUCCEEDED
 test calculator FAILED : 10^5+(!(2.5-!!3)+#4)*5^2/(#6.2*!7)+!8+9=409781
@@ -46,7 +43,7 @@ bool IsAClassicOperator(char c);
 bool IsASpecialOperator(char c);
 bool split_nb(vector<double>* Vnb,string chaine);
 bool split_op(vector<char>* op,string chaine);
-bool to_double(string chaine,double* nb);
+bool to_double(double* db,string str);
 double fact(double nb);
 void manage_pow(vector<double> *nb,vector<char> *op,int index);
 double manage_fact(double nb,vector<char> *op,int index);
@@ -59,7 +56,7 @@ int main(int argc, char const *argv[])
 {
     double tmp_db;
     string tmp_str;
-
+    
     //TEST IsANumber
     string test("10^5+(!(2.5-!!3)+#4)*5^2/(#6.2*!7)+!8+9");
     int score(0);
@@ -140,7 +137,7 @@ int main(int argc, char const *argv[])
     
     //TEST to_double
     double tmp(10);
-    to_double(to_string(tmp),&tmp_db);
+    to_double(&tmp_db,to_string(tmp));
     tmp_db-=2;
     if (tmp_db==tmp-2)
     {
@@ -180,8 +177,8 @@ int main(int argc, char const *argv[])
     //TEST manage_fact
     vchar.push_back('!');
     vchar.push_back('!');
-    //"!!3 => !(2*3)=!6=2*3*4*5*6=720"
     tmp_db = manage_fact(5,&vchar,0);
+
     if (tmp_db==fact(fact(5)))
     {
         cout<<"test manage_fact SUCCEEDED" <<endl;
@@ -203,13 +200,14 @@ int main(int argc, char const *argv[])
 
     //TEST ressearch_parenthese
     tmp_str=ressearch_parenthese(test);
-    if (tmp_str=="(!(2.5-!!3)+#4)")
+    if (tmp_str=="!(2.5-!!3)+#4")
     {
         cout<<"test ressearch_parenthese SUCCEEDED"<<endl;
     }else{
         cout<<"test ressearch_parenthese FAILED : "<<tmp_str<<endl;
     }
 
+    
     //TEST calculator
     calculator(test,&tmp_db);
     if (tmp_db==5)
@@ -218,7 +216,7 @@ int main(int argc, char const *argv[])
     }else{
         cout<<"test calculator FAILED : "<<test<<"="<<tmp_db<<endl;
     }
-
+    
     return 0;
 }
 
@@ -317,7 +315,7 @@ bool split_nb(vector<double>* Vnb,string chaine){
         }else{
             if (check)
             {
-                if(to_double(buff,&nb)){
+                if(to_double(&nb,buff)){
                     Vnb->push_back(nb); 
                     buff.clear();
                     check=false;
@@ -329,7 +327,7 @@ bool split_nb(vector<double>* Vnb,string chaine){
     }
     if (!buff.empty())
     {
-        if(to_double(buff,&nb)){
+        if(to_double(&nb,buff)){
             Vnb->push_back(nb);
             buff.clear();
         }
@@ -337,7 +335,6 @@ bool split_nb(vector<double>* Vnb,string chaine){
     return !Vnb->empty(); 
 }
 
-//pas de parenthese dans @chaine
 bool split_op(vector<char>* op,string chaine){
     for (size_t i = 0; i < chaine.size(); i++)
     {
@@ -349,81 +346,80 @@ bool split_op(vector<char>* op,string chaine){
     return !op->empty();
 }
 
-bool to_double(string chaine,double* nb){
+bool to_double(double* db,string str){
     double length(0),tmp(0);
-    if (chaine.empty())
+    if (str.empty())
     {
         return false;
     }
     //delete useless 0 at the begin and the end of the chaine
     int ind(0);
-    while (chaine.at(ind)=='0')
+    while (str.at(ind)=='0')
     {
-        chaine.erase(chaine.begin());
+        str.erase(str.begin());
         ++ind;
     }
-    ind=chaine.size()-1;
-    while(chaine.at(ind)=='0')
+    ind=str.size()-1;
+    while(str.at(ind)=='0')
     {
-        chaine.erase(chaine.begin()+ind);
+        str.erase(str.begin()+ind);
         --ind;
     }
-    if(chaine.at(ind)=='.'){
-        chaine.erase(chaine.begin()+ind);
+    if(str.at(ind)=='.'){
+        str.erase(str.begin()+ind);
     }
 
-    for (size_t i = 0; i < chaine.size(); i++)
+    for (size_t i = 0; i < str.size(); i++)
     {
         //check elt is accepted char
-        if (!(IsANumber(chaine.at(i)) or chaine.at(i)=='.'))
+        if (!(IsANumber(str.at(i)) or str.at(i)=='.'))
         {
             return false;
         }
         //get integer part length
-        if (chaine.at(i)=='.')
+        if (str.at(i)=='.')
         {
             length=i;
         }
     }
     //convert the string
-    for (size_t i = 0; i < chaine.size(); i++)
+    for (size_t i = 0; i < str.size(); i++)
     {
-        switch (chaine.at(i))
+        switch (str.at(i))
         {
         case '0':
             //nothing to do
             break;
         case '1':
-            tmp+=1*pow(10,chaine.size()-1-i-length);
+            tmp+=1*pow(10,str.size()-1-i-length);
             break;
         case '2':
-            tmp+=2*pow(10,chaine.size()-1-i-length);
+            tmp+=2*pow(10,str.size()-1-i-length);
             break;
         case '3':
-            tmp+=3*pow(10,chaine.size()-1-i-length);
+            tmp+=3*pow(10,str.size()-1-i-length);
             break;
         case '4':
-            tmp+=4*pow(10,chaine.size()-1-i-length);
+            tmp+=4*pow(10,str.size()-1-i-length);
             break;
         case '5':
-            tmp+=5*pow(10,chaine.size()-1-i-length);
+            tmp+=5*pow(10,str.size()-1-i-length);
             break;
         case '6':
-            tmp+=6*pow(10,chaine.size()-1-i-length);
+            tmp+=6*pow(10,str.size()-1-i-length);
             break;
         case '7':
-            tmp+=7*pow(10,chaine.size()-1-i-length);
+            tmp+=7*pow(10,str.size()-1-i-length);
             break;
         case '8':
-            tmp+=8*pow(10,chaine.size()-1-i-length);
+            tmp+=8*pow(10,str.size()-1-i-length);
             break;
         case '9':
-            tmp+=9*pow(10,chaine.size()-1-i-length);
+            tmp+=9*pow(10,str.size()-1-i-length);
             break;
         }
     }
-    *nb=tmp;
-    //retour de convertion reussi
+    *db=tmp;
     return true;
 }
 
@@ -431,41 +427,78 @@ string make_correctly_expression(string exp){
     return exp;
 }
 
-string ressearch_parenthese(string chaine){
+string ressearch_parenthese(string str){
     int  nb_parenthesis(0);
     bool start(false);
     string buff;
-    for (size_t i = 0; i < chaine.size(); i++)
+    for (size_t i = 0; i < str.size(); i++)
     {
-        if (chaine.at(i)=='(')
+        if (str.at(i)==')')
         {
-            ++nb_parenthesis;
-            start=true;
+            --nb_parenthesis;
         }
         if (nb_parenthesis>0)
         {
-            buff.push_back(chaine.at(i));
+            buff.push_back(str.at(i));
         }
-        if (chaine.at(i)==')')
+        if (str.at(i)=='(')
         {
-            --nb_parenthesis;
+            ++nb_parenthesis;
+            start=true;
         }
         if (start and nb_parenthesis==0)
         {
             return buff;
         }
     }
+    return str;
+}
+
+double fact(double nb){
+    double buff=1;
+    for (size_t i = 2; i <= nb; i++)
+    {
+        buff*=i;
+    }
     return buff;
+}
+
+void manage_pow(vector<double> *nb,vector<char> *op,int index){
+    if (index<op->size()-1)
+    {
+        if (op->at(index+1)=='^')
+        {
+            manage_pow(nb,op,index+1);
+        }
+    }
+    nb->at(index)=pow(nb->at(index),nb->at(index+1));
+    nb->erase(nb->begin()+index+1);
+    op->erase(op->begin()+index);
+}
+
+double manage_fact(double nb,vector<char> *op,int index){
+    if (index<op->size()-1 and op->at(index+1)=='!')
+    {
+        return fact(manage_fact(nb,op,index+1));
+    }
+    op->erase(op->begin()+index);
+    return fact(nb);    
 }
 
 bool calculator(string exp,double *buff){
     exp=make_correctly_expression(exp);
     string exp_new;
     exp_new=ressearch_parenthese(exp);
-    if (exp!=exp_new)
+    cout<<"exp: "<<exp<<endl;
+    cout<<"exp_new: "<<exp_new<<endl;
+    if(exp!=exp_new)
     {
+        cout<<"find["<<exp.find(exp_new)<<"]"<<exp.at(exp.find(exp_new))<<endl;
+        cout<<"size: "<<exp_new.size()<<endl;
+        cout<<"result :"<<to_string(calculator(exp_new,buff))<<"||"<<buff<<endl;
         exp.replace(exp.find(exp_new)-1, exp_new.size()+2, to_string(calculator(exp_new,buff)));
     }
+    
     vector<double> nb;
     vector<char> op;
     split_nb(&nb,exp);
@@ -479,8 +512,7 @@ bool calculator(string exp,double *buff){
             i-=1;
         }else if (op.at(i)=='!')
         {
-            nb.at(i)=fact(nb.at(i));
-            op.erase(op.begin()+i);
+            nb.at(i)=manage_fact(nb.at(i),&op,i);
             i-=1;
         }else if (op.at(i)=='#')
         {
@@ -525,40 +557,8 @@ bool calculator(string exp,double *buff){
     {
         return false;
     }
-    if(to_double(to_string(nb.at(0)),buff)){
+    if(to_double(buff,to_string(nb.at(0)))){
         return true;
     }
     return false;
-}
-
-double fact(double nb){
-    double buff=1;
-    for (size_t i = 2; i <= nb; i++)
-    {
-        buff*=i;
-    }
-    return buff;
-}
-
-void manage_pow(vector<double> *nb,vector<char> *op,int index){
-    if (index<op->size()-1)
-    {
-        if (op->at(index+1)=='^')
-        {
-            manage_pow(nb,op,index+1);
-        }
-    }
-    nb->at(index)=pow(nb->at(index),nb->at(index+1));
-    nb->erase(nb->begin()+index+1);
-    op->erase(op->begin()+index);
-}
-
-//!!3
-double manage_fact(double nb,vector<char> *op,int index){
-    if (index<op->size()-1 and op->at(index+1)=='!')
-    {
-        return fact(manage_fact(nb,op,index+1));
-    }
-    op->erase(op->begin()+index);
-    return fact(nb);    
 }
