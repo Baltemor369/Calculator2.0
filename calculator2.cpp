@@ -33,6 +33,7 @@ bool to_double(double* db,string str);
 double fact(double nb);
 void manage_pow(vector<double>* nb,vector<char> *op,int index);
 double manage_fact(double nb,vector<char> *op,int index);
+bool check_accepted_char(string str, string accepted_char);
 
 string make_correctly_expression(string exp);
 string ressearch_parenthese(string chaine);
@@ -213,6 +214,13 @@ int main(int argc, char const *argv[])
     return 0;
 }
 
+/**
+ * @brief return if a char c is a number or not
+ * 
+ * @param c <char> a char to analyze.
+ * @return true if the it's a number,
+ * @return false  if it's not
+ */
 bool IsANumber(char c){
     switch (c)
     {
@@ -253,6 +261,13 @@ bool IsANumber(char c){
     }
 }
 
+/**
+ * @brief return if a char c is a operator like '+', '-', '*' or '/'.
+ * 
+ * @param c <char> a char to analyze. 
+ * @return true if it's a classic operator,
+ * @return false if it's not.
+ */
 bool IsAClassicOperator(char c){
     switch (c)
     {
@@ -275,6 +290,13 @@ bool IsAClassicOperator(char c){
     }
 }
 
+/**
+ * @brief return if a char c is a operator like '^', '!' or '#'.
+ * 
+ * @param c <char> a char to analyze. 
+ * @return true if it's a special operator,
+ * @return false if it's not.
+ */
 bool IsASpecialOperator(char c){
     switch (c)
     {
@@ -294,6 +316,14 @@ bool IsASpecialOperator(char c){
     }
 }
 
+/**
+ * @brief add to a vector type <double> every number find in a <string>.
+ * 
+ * @param Vnb <double> the vector where store every number.
+ * @param chaine <string> the string to split.
+ * @return true if the function find any number,
+ * @return false if not.
+ */
 bool split_nb(vector<double>* Vnb,string chaine){
     string buff;
     bool check(false);
@@ -327,6 +357,14 @@ bool split_nb(vector<double>* Vnb,string chaine){
     return !Vnb->empty(); 
 }
 
+/**
+ * @brief add to a vector type <char> every operator find a <string>. operator list : +, -, *, /, !, #, ^
+ * 
+ * @param op <char> the vector where store every operator finded .
+ * @param chaine <string> the string to split.
+ * @return true if the function find any operator,
+ * @return false if not.
+ */
 bool split_op(vector<char>* op,string chaine){
     for (size_t i = 0; i < chaine.size(); i++)
     {
@@ -338,12 +376,27 @@ bool split_op(vector<char>* op,string chaine){
     return !op->empty();
 }
 
+/**
+ * @brief Convert a <string> to <double>. Accept only number char and '.' for decimals. 
+ * 
+ * @param db <double> a variable where store the converted number.
+ * @param str <string> the string to convert.
+ * @return true if the function succeeded in converting,
+ * @return false if not.
+ */
 bool to_double(double* db,string str){
     double size_int(0),tmp(0);
     if (str.empty())
     {
         return false;
     }
+    //check every char is accepted
+    
+    if (!check_accepted_char(str,"0123456789."))
+    {
+        return false;
+    }
+
     //delete useless 0 at the begin and the end of the chaine
     int ind(0);
     while (str.at(ind)=='0')
@@ -415,12 +468,23 @@ bool to_double(double* db,string str){
     return true;
 }
 
+
 string make_correctly_expression(string exp){
     return exp;
 }
 
-
+/**
+ * @brief return a expression between parenthesis find in a <string>. from the first opened and finded parenthesis to its closed parenthesis.
+ * 
+ * @param str <string> the string to analyse
+ * @return if parenthesis finded in the <string>, return the expression between this parenthesis, if no parenthesis finded, return the original <string>
+ */
 string ressearch_parenthese(string str){
+    //check every char is accepted
+    if (!check_accepted_char(str,"0123465789.+-*/!^#()"))
+    {
+        str=make_correctly_expression(str);
+    }
     int  nb_parenthesis(0);
     bool start(false);
     string buff;
@@ -447,6 +511,12 @@ string ressearch_parenthese(string str){
     return str;
 }
 
+/**
+ * @brief calculate the factorial of a number.
+ * 
+ * @param nb <double> the number for facotiral 
+ * @return return the result of factorial(nb).
+ */
 double fact(double nb){
     if (nb<0)
     {
@@ -461,6 +531,13 @@ double fact(double nb){
     return buff;
 }
 
+/**
+ * @brief manage sequence of power like "2^2^2=2^4=16", calcul and arrange the vectors
+ * 
+ * @param nb a vector type <double> with every member of the calcul
+ * @param op a vector type <char> with every operator of the calcul
+ * @param index index of the first '^' finded.
+ */
 void manage_pow(vector<double> *nb,vector<char> *op,int index){
     if (index<op->size()-1)
     {
@@ -483,9 +560,44 @@ double manage_fact(double nb,vector<char> *op,int index){
     return fact(nb);
 }
 
+bool check_accepted_char(string str, string accepted_char){
+    bool check(false);
+    for (size_t i = 0; i < str.size(); i++)
+    {
+        for (size_t j = 0; j < accepted_char.size(); j++)
+        {
+            cout<<"str(i)="<<str.at(i)<<endl;
+            cout<<"accepted_char(j)="<<accepted_char.at(j)<<endl;
+            cout<<"######"<<endl;
+            if (str.at(i)==accepted_char.at(j))
+            { 
+                check==true;
+            }
+        }
+        cout<<check<<endl;
+        if (check==false)
+        {
+            return false;
+        }
+        check=false;
+    }
+    return true;
+}
 
+/**
+ * @brief main fonction,take a expression and make the calcul write in it.
+ * 
+ * @param exp <string> the expression with the calcul in.
+ * @param tmp <double> a variable where store the result of the calcul.
+ * @return true if the function succeed in calculating,
+ * @return false if not.
+ */
 bool calculator(string exp,double *tmp){
-    exp=make_correctly_expression(exp);
+    //check every char is accepted
+    if (!check_accepted_char(exp,"0123465789.+-*/!^#()"))
+    {
+        exp=make_correctly_expression(exp);
+    }
     string exp_new;
     exp_new=ressearch_parenthese(exp);
     if(exp!=exp_new)
