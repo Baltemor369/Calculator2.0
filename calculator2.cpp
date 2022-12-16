@@ -7,11 +7,11 @@ g++ ..\fct_4_error\fct_error.cpp .\calculator2.cpp -o ..\bin\calc.exe
 /**
  * TASK LIST :
  * + make_correctly_expression
- * + make function for  ^ ! #
+ * + make function for #
  * + add verification of entry in every function
- * + make to_double more global add convert char=>double int=>double etc
  * 
- * fonction test :
+ * 
+ * fonction test returns:
 test IsANumber SUCCEEDED
 test IsAClassicOperator SUCCEEDED
 test IsASpecialOperator SUCCEEDED
@@ -26,7 +26,7 @@ test ressearch_parenthese SUCCEEDED
 test calculator FAILED : 10^5+(!(2.5-!!3)+#4)*5^2/(#6.2*!7)+!8+9=409781
  * 
  * op : + - * /  ! ^ # 
- * english notation : 128.51 
+ * /!\english notation : 128.51 
 */
 
 #include <iostream>
@@ -50,7 +50,7 @@ double manage_fact(double nb,vector<char> *op,int index);
 
 string make_correctly_expression(string exp);
 string ressearch_parenthese(string chaine);
-bool calculator(string exp,double* buff);
+bool calculator(string exp,double *tmp);
 
 int main(int argc, char const *argv[])
 {
@@ -143,11 +143,16 @@ int main(int argc, char const *argv[])
         tmp_db-=2;
         if (tmp_db==tmp-2)
         {
-            cout<<"test to_double("<<i<<") SUCCEEDED" <<endl;
-        }else{
-            cout<<"test to_double FAILED : "<<tmp<<"-2="<<tmp_db<<endl;
+            ++score;
         }
     }
+    if (score==(105-95)/0.5+1)
+    {
+        cout<<"test to_double SUCCEEDED" <<endl;
+    }else{
+        cout<<"test to_double FAILED : score="<<score<<endl;
+    }
+    
 
     //TEST fact
     tmp_db=fact(6);
@@ -211,15 +216,14 @@ int main(int argc, char const *argv[])
 
     
     //TEST calculator
-    /*
-    calculator(test,&tmp_db);
-    if (tmp_db==5)
+    test="8^2+(9-4)*3-!2";
+    if (calculator(test,&tmp_db) and tmp_db==pow(8,2)+(9-4)*3-fact(2))
     {
         cout<<"test calculator SUCCEEDED" <<endl;
     }else{
         cout<<"test calculator FAILED : "<<test<<"="<<tmp_db<<endl;
     }
-    */
+    
     return 0;
 }
 
@@ -493,21 +497,23 @@ double manage_fact(double nb,vector<char> *op,int index){
     return fact(nb);
 }
 
-bool calculator(string exp,double *buff){
+
+bool calculator(string exp,double *tmp){
     exp=make_correctly_expression(exp);
     string exp_new;
     exp_new=ressearch_parenthese(exp);
     if(exp!=exp_new)
     {    
-        exp.replace(exp.find(exp_new)-1, exp_new.size()+2, to_string(calculator(exp_new,buff)));
+        if(calculator(exp_new,tmp)){
+            exp.replace(exp.find(exp_new)-1, exp_new.size()+2, to_string(*tmp));
+        }else{
+            return false;
+        }
     }
-    cout<<"exp: "<<exp<<endl;
     vector<double> nb;
     vector<char> op;
     split_nb(&nb,exp);
     split_op(&op,exp);
-    display_v_char(op);
-    display_v_double(nb);
     for (size_t i = 0; i < op.size(); i++)
     {
         if (op.at(i)=='^')
@@ -525,8 +531,6 @@ bool calculator(string exp,double *buff){
             i-=0;
         }
     }
-    display_v_char(op);
-    display_v_double(nb);
     for (size_t i = 0; i < op.size(); i++)
     {
         if (op.at(i)=='*')
@@ -543,8 +547,6 @@ bool calculator(string exp,double *buff){
             i-=1;
         }
     }
-    display_v_char(op);
-    display_v_double(nb);
     for (size_t i = 0; i < op.size(); i++)
     {
         if (op.at(i)=='+')
@@ -561,13 +563,7 @@ bool calculator(string exp,double *buff){
             i-=1;
         }
     }
-    display_v_char(op);
-    display_v_double(nb);
-    if (nb.size()!=1)
-    {
-        return false;
-    }
-    if(to_double(buff,to_string(nb.at(0)))){
+    if(to_double(tmp,to_string(nb.at(0)))){
         return true;
     }
     return false;
