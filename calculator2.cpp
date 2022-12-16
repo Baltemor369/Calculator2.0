@@ -45,7 +45,7 @@ bool split_nb(vector<double>* Vnb,string chaine);
 bool split_op(vector<char>* op,string chaine);
 bool to_double(double* db,string str);
 double fact(double nb);
-void manage_pow(vector<double> *nb,vector<char> *op,int index);
+void manage_pow(vector<double>* nb,vector<char> *op,int index);
 double manage_fact(double nb,vector<char> *op,int index);
 
 string make_correctly_expression(string exp);
@@ -136,14 +136,17 @@ int main(int argc, char const *argv[])
     }
     
     //TEST to_double
-    double tmp(010.50);
-    to_double(&tmp_db,"0000"+to_string(tmp)+"00");
-    tmp_db-=2;
-    if (tmp_db==tmp-2)
+    for (double i = 95; i <= 105; i+=0.5)
     {
-        cout<<"test to_double SUCCEEDED" <<endl;
-    }else{
-        cout<<"test to_double FAILED : "<<tmp<<"-2="<<tmp_db<<endl;
+        double tmp(i);
+        to_double(&tmp_db,"0000"+to_string(tmp)+"000");
+        tmp_db-=2;
+        if (tmp_db==tmp-2)
+        {
+            cout<<"test to_double("<<i<<") SUCCEEDED" <<endl;
+        }else{
+            cout<<"test to_double FAILED : "<<tmp<<"-2="<<tmp_db<<endl;
+        }
     }
 
     //TEST fact
@@ -163,7 +166,6 @@ int main(int argc, char const *argv[])
     vector<char> vchar;
     vchar.push_back('^');
     vchar.push_back('^');
-    //
     manage_pow(&vnb,&vchar,0);
     if (vnb.at(0)==pow(3,pow(2,4)))
     {
@@ -175,11 +177,11 @@ int main(int argc, char const *argv[])
     vchar.clear();
 
     //TEST manage_fact
+    tmp_db=3;
     vchar.push_back('!');
     vchar.push_back('!');
-    tmp_db = manage_fact(5,&vchar,0);
 
-    if (tmp_db==fact(fact(5)))
+    if (manage_fact(tmp_db,&vchar,0)==fact(fact(3)))
     {
         cout<<"test manage_fact SUCCEEDED" <<endl;
     }else{
@@ -209,6 +211,7 @@ int main(int argc, char const *argv[])
 
     
     //TEST calculator
+    /*
     calculator(test,&tmp_db);
     if (tmp_db==5)
     {
@@ -216,7 +219,7 @@ int main(int argc, char const *argv[])
     }else{
         cout<<"test calculator FAILED : "<<test<<"="<<tmp_db<<endl;
     }
-    
+    */
     return 0;
 }
 
@@ -346,7 +349,7 @@ bool split_op(vector<char>* op,string chaine){
 }
 
 bool to_double(double* db,string str){
-    double length(0),tmp(0);
+    double size_int(0),tmp(0);
     if (str.empty())
     {
         return false;
@@ -366,13 +369,13 @@ bool to_double(double* db,string str){
     if(str.at(ind)=='.'){
         str.erase(str.begin()+ind);
     }
-
+    //get integer part size
     for (size_t i = 0; i < str.size(); i++)
     {
-        //get integer part length
         if (str.at(i)=='.')
         {
-            length=i;
+            size_int=i;
+            str.erase(str.begin()+i);
         }
     }
     //convert the string
@@ -384,44 +387,48 @@ bool to_double(double* db,string str){
             //nothing to do
             break;
         case '1':
-            tmp+=1*pow(10,str.size()-1-i-length);
+            tmp+=1*pow(10,str.size()-i-1);
             break;
         case '2':
-            tmp+=2*pow(10,str.size()-1-i-length);
+            tmp+=2*pow(10,str.size()-i-1);
             break;
         case '3':
-            tmp+=3*pow(10,str.size()-1-i-length);
+            tmp+=3*pow(10,str.size()-i-1);
             break;
         case '4':
-            tmp+=4*pow(10,str.size()-1-i-length);
+            tmp+=4*pow(10,str.size()-i-1);
             break;
         case '5':
-            tmp+=5*pow(10,str.size()-1-i-length);
+            tmp+=5*pow(10,str.size()-i-1);
             break;
         case '6':
-            tmp+=6*pow(10,str.size()-1-i-length);
+            tmp+=6*pow(10,str.size()-i-1);
             break;
         case '7':
-            tmp+=7*pow(10,str.size()-1-i-length);
+            tmp+=7*pow(10,str.size()-i-1);
             break;
         case '8':
-            tmp+=8*pow(10,str.size()-1-i-length);
+            tmp+=8*pow(10,str.size()-i-1);
             break;
         case '9':
-            tmp+=9*pow(10,str.size()-1-i-length);
-            break;
-        case '.':
-            --length;
+            tmp+=9*pow(10,str.size()-i-1);
             break;
         }
     }
-    *db=tmp;
+    if (size_int>0)
+    {
+        *db=tmp/pow(10,str.size()-size_int);
+    }else{
+        *db=tmp;
+    }
+
     return true;
 }
 
 string make_correctly_expression(string exp){
     return exp;
 }
+
 
 string ressearch_parenthese(string str){
     int  nb_parenthesis(0);
@@ -451,6 +458,11 @@ string ressearch_parenthese(string str){
 }
 
 double fact(double nb){
+    if (nb<0)
+    {
+        return -1.0;
+    }
+    
     double buff=1;
     for (size_t i = 2; i <= nb; i++)
     {
@@ -478,7 +490,7 @@ double manage_fact(double nb,vector<char> *op,int index){
         return fact(manage_fact(nb,op,index+1));
     }
     op->erase(op->begin()+index);
-    return fact(nb);    
+    return fact(nb);
 }
 
 bool calculator(string exp,double *buff){
@@ -486,15 +498,16 @@ bool calculator(string exp,double *buff){
     string exp_new;
     exp_new=ressearch_parenthese(exp);
     if(exp!=exp_new)
-    {
+    {    
         exp.replace(exp.find(exp_new)-1, exp_new.size()+2, to_string(calculator(exp_new,buff)));
     }
-    
+    cout<<"exp: "<<exp<<endl;
     vector<double> nb;
     vector<char> op;
     split_nb(&nb,exp);
     split_op(&op,exp);
-
+    display_v_char(op);
+    display_v_double(nb);
     for (size_t i = 0; i < op.size(); i++)
     {
         if (op.at(i)=='^')
@@ -512,6 +525,8 @@ bool calculator(string exp,double *buff){
             i-=0;
         }
     }
+    display_v_char(op);
+    display_v_double(nb);
     for (size_t i = 0; i < op.size(); i++)
     {
         if (op.at(i)=='*')
@@ -528,6 +543,8 @@ bool calculator(string exp,double *buff){
             i-=1;
         }
     }
+    display_v_char(op);
+    display_v_double(nb);
     for (size_t i = 0; i < op.size(); i++)
     {
         if (op.at(i)=='+')
@@ -544,6 +561,8 @@ bool calculator(string exp,double *buff){
             i-=1;
         }
     }
+    display_v_char(op);
+    display_v_double(nb);
     if (nb.size()!=1)
     {
         return false;
