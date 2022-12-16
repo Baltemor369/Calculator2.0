@@ -9,21 +9,7 @@ g++ ..\fct_4_error\fct_error.cpp .\calculator2.cpp -o ..\bin\calc.exe
  * + make_correctly_expression
  * + make function for #
  * + add verification of entry in every function
- * 
- * 
- * fonction test returns:
-test IsANumber SUCCEEDED
-test IsAClassicOperator SUCCEEDED
-test IsASpecialOperator SUCCEEDED
-test split_nb SUCCEEDED
-test split_op SUCCEEDED
-test to_double SUCCEEDED
-test fact SUCCEEDED
-test manage_pow SUCCEEDED
-test manage_fact SUCCEEDED
-test make_correctly_expression FAILED : =>
-test ressearch_parenthese SUCCEEDED
-test calculator FAILED : 10^5+(!(2.5-!!3)+#4)*5^2/(#6.2*!7)+!8+9=409781
+ * + make comments for all function
  * 
  * op : + - * /  ! ^ # 
  * /!\english notation : 128.51 
