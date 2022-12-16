@@ -480,6 +480,69 @@ bool to_double(double* db,string str){
 
 
 string make_correctly_expression(string exp){
+    //delete non accepted_char
+    string accept_char="0123456789.()+-*/!#^";
+    bool check(false);
+    for (size_t i = 0; i < exp.size(); i++)
+    {
+        for (size_t j = 0; j < accept_char.size(); j++)
+        {
+            if (exp.at(i)==accept_char.at(j))
+            {
+                check=true;
+            }
+        }
+        if (!check)
+        {
+            exp.erase(exp.begin()+i);
+        }
+        check=false;
+    }
+
+    //delete sequence of classic operator, not possible "2++4"
+    for (size_t i = 0; i < exp.size(); i++)
+    {
+        if (IsAClassicOperator(exp.at(i)) and IsAClassicOperator(exp.at(i+1)))
+        {
+            exp.erase(exp.begin()+i+1);
+            --i;
+        }
+        if ((IsAClassicOperator(exp.at(i)) or IsASpecialOperator(exp.at(i))) and exp.at(i+1)=='.')
+        {
+            exp.insert(exp.begin()+i,'0');
+        }
+    }
+    //delete double decimal "2.24.12"
+    check=false;
+    for (size_t i = 0; i < exp.size(); i++)
+    {
+        if (exp.at(i)=='.' and check)
+        {
+            exp.erase(exp.begin()+i);
+        }
+        if (exp.at(i)=='.' and !check)
+        {
+            check=true;
+        }
+        if (IsAClassicOperator(exp.at(i)) or IsASpecialOperator(exp.at(i)) or exp.at(i)=='(' or exp.at(i)==')')
+        {
+            check=false;
+        }
+    }
+    
+    vector<int> pos_parenth;
+    for (size_t i = 0; i < exp.size(); i++)
+    {
+        if (exp.at(i))
+        {
+            /* code */
+        }
+        
+    }
+    
+
+    
+    
     return exp;
 }
 
