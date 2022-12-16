@@ -201,6 +201,16 @@ int main(int argc, char const *argv[])
         cout<<"test ressearch_parenthese FAILED : "<<tmp_str<<endl;
     }
 
+    //TEST check_accepted_char
+
+    if (check_accepted_char("12.","0123456789."))
+    {
+        cout<<"test check_accepted_char SUCCEEDED"<<endl;
+    }else{
+        cout<<"test check_accepted_char FAILED "<<endl;
+    }
+    
+
     
     //TEST calculator
     test="8^2+(9-4)*3-!2";
@@ -566,16 +576,12 @@ bool check_accepted_char(string str, string accepted_char){
     {
         for (size_t j = 0; j < accepted_char.size(); j++)
         {
-            cout<<"str(i)="<<str.at(i)<<endl;
-            cout<<"accepted_char(j)="<<accepted_char.at(j)<<endl;
-            cout<<"######"<<endl;
             if (str.at(i)==accepted_char.at(j))
             { 
-                check==true;
+                check=true;
             }
         }
-        cout<<check<<endl;
-        if (check==false)
+        if (!check)
         {
             return false;
         }
