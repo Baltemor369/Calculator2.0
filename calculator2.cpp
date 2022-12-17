@@ -8,8 +8,6 @@ g++ ..\fct_4_error\fct_error.cpp .\calculator2.cpp -o ..\bin\calc.exe
  * TASK LIST :
  * + handle_overflow
  * + make function for #
- * + add verification of entry in every function
- * + make comments for all function
  * 
  * op : + - * /  ! ^ # 
  * /!\english notation : 128.51 
@@ -33,6 +31,7 @@ bool to_double(double* db,string str);
 double fact(double nb);
 void manage_pow(vector<double>* nb,vector<char> *op,int index);
 double manage_fact(double nb,vector<char> *op,int index);
+double manage_sqrt(double nb,vector<char> *op,int index);
 bool check_accepted_char(string str, string accepted_char);
 
 string handle_overflow(string exp);
@@ -177,10 +176,23 @@ int main(int argc, char const *argv[])
     {
         cout<<"test manage_fact SUCCEEDED" <<endl;
     }else{
-        cout<<"test manage_fact FAILED : "<<tmp_db<<endl;
+        cout<<"test manage_fact FAILED : "<<manage_fact(tmp_db,&vchar,0)<<endl;
+    }
+    vchar.clear();
+
+    //TEST manage_sqrt
+    tmp_db=81;
+    
+    vchar.push_back('#');
+    vchar.push_back('#');
+
+    if (manage_sqrt(tmp_db,&vchar,0)==sqrt(sqrt(81)))
+    {
+        cout<<"test manage_sqrt SUCCEEDED" <<endl;
+    }else{
+        cout<<"test manage_sqrt FAILED : "<<manage_sqrt(tmp_db,&vchar,0)<<"="<<sqrt(sqrt(81))<<endl;
     }
     
-
     //TEST handle_overflow
     string exp("");
     tmp_str=handle_overflow(exp);
@@ -213,8 +225,8 @@ int main(int argc, char const *argv[])
 
     
     //TEST calculator
-    test="8^2+(9-4)*3-!2";
-    if (calculator(test,&tmp_db) and tmp_db==pow(8,2)+(9-4)*3-fact(2))
+    test="8^2+(9-4)*#9-!2";
+    if (calculator(test,&tmp_db) and tmp_db==pow(8,2)+(9-4)*sqrt(9)-fact(2))
     {
         cout<<"test calculator SUCCEEDED" <<endl;
     }else{
@@ -651,6 +663,15 @@ double manage_fact(double nb,vector<char> *op,int index){
     return fact(nb);
 }
 
+double manage_sqrt(double nb,vector<char> *op,int index){
+    if (index<op->size()-1 and op->at(index+1)=='#')
+    {
+        return sqrt(manage_sqrt(nb,op,index+1));
+    }
+    op->erase(op->begin()+index);
+    return sqrt(nb);
+}
+
 bool check_accepted_char(string str, string accepted_char){
     bool check(false);
     for (size_t i = 0; i < str.size(); i++)
@@ -711,8 +732,7 @@ bool calculator(string exp,double *tmp){
             i-0;
         }else if (op.at(i)=='#')
         {
-            nb.at(i)=sqrt(nb.at(i));
-            op.erase(op.begin()+i);
+            manage_sqrt(nb.at(i),&op,i);
             i-=0;
         }
     }
