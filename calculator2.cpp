@@ -6,7 +6,7 @@ g++ ..\fct_4_error\fct_error.cpp .\calculator2.cpp -o ..\bin\calc.exe
 
 /**
  * TASK LIST :
- * + make_correctly_expression
+ * + handle_overflow
  * + make function for #
  * + add verification of entry in every function
  * + make comments for all function
@@ -35,7 +35,7 @@ void manage_pow(vector<double>* nb,vector<char> *op,int index);
 double manage_fact(double nb,vector<char> *op,int index);
 bool check_accepted_char(string str, string accepted_char);
 
-string make_correctly_expression(string exp);
+string handle_overflow(string exp);
 string ressearch_parenthese(string chaine);
 bool calculator(string exp,double *tmp);
 
@@ -181,14 +181,14 @@ int main(int argc, char const *argv[])
     }
     
 
-    //TEST make_correctly_expression
+    //TEST handle_overflow
     string exp("");
-    tmp_str=make_correctly_expression(exp);
+    tmp_str=handle_overflow(exp);
     if (tmp_str==test)
     {
-        cout<<"test make_correctly_expression SUCCEEDED" <<endl;
+        cout<<"test handle_overflow SUCCEEDED" <<endl;
     }else{
-        cout<<"test make_correctly_expression FAILED : "<<exp<<"=>"<<tmp_str<<endl;
+        cout<<"test handle_overflow FAILED : "<<exp<<"=>"<<tmp_str<<endl;
     }
     
 
@@ -479,7 +479,7 @@ bool to_double(double* db,string str){
 }
 
 
-string make_correctly_expression(string exp){
+string handle_overflow(string exp){
     //delete non accepted_char
     string accept_char="0123456789.()+-*/!#^";
     bool check(false);
@@ -530,18 +530,36 @@ string make_correctly_expression(string exp){
         }
     }
     
-    vector<int> pos_parenth;
+    //parenthesis not open or not close
+    int nb_parenth(0);
+    vector<int> pos_parenth_open;
     for (size_t i = 0; i < exp.size(); i++)
     {
-        if (exp.at(i))
+        if (exp.at(i)=='(')
         {
-            /* code */
+            if (nb_parenth==0 or IsAClassicOperator(exp.at(i+1)))
+            {
+                //delete not opened parenthesis
+                exp.erase(exp.begin()+i);
+            }else{
+                --nb_parenth;
+                pos_parenth_open.pop_back();
+            }
         }
-        
+        if (exp.at(i)==')')
+        {
+            ++nb_parenth;
+        }
     }
-    
-
-    
+    //delete closed parenthesis
+    if (!pos_parenth_open.empty())
+    {
+        for (size_t i = 0; i < pos_parenth_open.size(); i++)
+        {
+            exp.erase(exp.begin()+i);
+        }
+        pos_parenth_open.clear();
+    }
     
     return exp;
 }
@@ -556,7 +574,7 @@ string ressearch_parenthese(string str){
     //check every char is accepted
     if (!check_accepted_char(str,"0123465789.+-*/!^#()"))
     {
-        str=make_correctly_expression(str);
+        str=handle_overflow(str);
     }
     int  nb_parenthesis(0);
     bool start(false);
@@ -665,7 +683,7 @@ bool calculator(string exp,double *tmp){
     //check every char is accepted
     if (!check_accepted_char(exp,"0123465789.+-*/!^#()"))
     {
-        exp=make_correctly_expression(exp);
+        exp=handle_overflow(exp);
     }
     string exp_new;
     exp_new=ressearch_parenthese(exp);
