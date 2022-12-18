@@ -7,9 +7,10 @@ Creation d'un calculatrice prenant en charge les operations + - * / ! ^ (puissan
 Les fichiers ont été sous la forme d'un module à simplement include dans d'autre projet au besoin.
 
 Le fichier "main.cpp" permet l'utilisation de la calculatrice tel quel:
+
 Une seule compilation nécessaire avec la commande :
 
-- g++ .\calculator.cpp .\main.cpp -o calcul.exe
+-g++ .\calculator.cpp .\main.cpp -o calcul.exe
 
 Puis pour faire les calculs :
 -calcul.exe "votre_calcul" 
