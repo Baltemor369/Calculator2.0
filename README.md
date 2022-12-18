@@ -11,7 +11,7 @@ Une seule compilation nécessaire avec la commande :
 - g++ .\calculator.cpp .\main.cpp -o calcul.exe
 Puis pour faire les calculs :
 -calcul.exe "votre_calcul" 
-La forme du resultat est la suivante : "votre_calcul = @le_resultat"
+La forme du resultat est la suivante : "votre_calcul = le_resultat"
 
 Des améliorations seront bien évidemment à prévoir, le git sera donc mis à jour si nécessaire.
 
