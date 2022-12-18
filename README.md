@@ -7,7 +7,7 @@ Pour utiliser la calculatrice dans d'autre projet, il suffit de mettre les deux 
 
 #include ".\Path\calculator.hpp".
 
-pour utiliser seulement la calculatrice, il vous faut les fichier "calculator.cpp","calculator.hpp" et "main.cpp" dans le même dossier, puis compiler les deux fichiers grâce à cette commande :
+pour utiliser seulement la calculatrice, il vous faut les fichier "calculator.cpp","calculator.hpp" et "main.cpp" dans le même dossier, puis compiler les fichiers grâce à cette commande :
 
 -g++ .\calculator.cpp .\main.cpp -o calcul.exe
 
