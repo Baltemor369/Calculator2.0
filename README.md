@@ -3,7 +3,7 @@
 
 [Premier projet] Creation d'une calculatrice en C++ prenant en charge les operations + - * / ! ^ (puissance) #(racine carré), ainsi que les parenthèses pour les priorités de calcul.
 
-Les fichiers ont été fait sous forme d'un module pour permettre l'utilisation dans d'autre projet au besoin, grâce à un #include "calculator.hpp".
+Les fichiers ont été fait sous forme d'un module pour permettre leur utilisation, grâce à un -#include "calculator.hpp", dans d'autre projet au besoin.
 
 Le fichier "main.cpp" permet l'utilisation de la calculatrice tel quel:
 
