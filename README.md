@@ -20,7 +20,6 @@ La forme du resultat est la suivante : "votre_calcul = le_resultat"
 Des améliorations et corrections de bug seront à prévoir, le git sera donc mis à jour si nécessaire.
 
 Les améliorations déjà pensées :
-+ optimisation des noms de variable
 + mettre en place une interface graphique(GUI) pour faciliter l'utilisation.
 + permettre des calculs avec des fonctions plus complexe.
 + permettre des caluls avec inconnus et ainsi des études de fonctions.
