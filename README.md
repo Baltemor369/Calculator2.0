@@ -1,10 +1,9 @@
 # Calculator2.0
 [First project] Create a calculator with C++ language
 
-Premier projet en C++
-Creation d'un calculatrice prenant en charge les operations + - * / ! ^ (puissance) #(racine carré), ainsi que les parenthèses pour les priorités de calcul.
+[Premier projet] Creation d'une calculatrice en C++ prenant en charge les operations + - * / ! ^ (puissance) #(racine carré), ainsi que les parenthèses pour les priorités de calcul.
 
-Les fichiers ont été sous la forme d'un module à simplement include dans d'autre projet au besoin.
+Les fichiers ont été fait sous forme d'un module pour permettre l'utilisation dans d'autre projet au besoin, grâce à un #include "calculator.hpp".
 
 Le fichier "main.cpp" permet l'utilisation de la calculatrice tel quel:
 
