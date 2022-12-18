@@ -5,13 +5,11 @@
 
 Les fichiers ont été fait sous forme d'un module pour permettre leur utilisation, grâce à #include "calculator.hpp", dans d'autre projet au besoin.
 
-Le fichier "main.cpp" permet l'utilisation de la calculatrice tel quel:
-
-Une seule compilation nécessaire avec la commande :
+pour utiliser la calculatrice, il vous faut les fichier "calculator.cpp","calculator.hpp" et "main.cpp" dans le même dossier, puis compiler les deux fichiers grâce à cette commande :
 
 -g++ .\calculator.cpp .\main.cpp -o calcul.exe
 
-Puis pour faire les calculs :
+Puis pour faire un calcul :
 
 -calcul.exe "votre_calcul" 
 
