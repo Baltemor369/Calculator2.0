@@ -1,38 +1,6 @@
-/*
-location : .\calculator\src\
-compile command : 
-g++ ..\fct_4_error\fct_error.cpp .\calculator2.cpp -o ..\bin\calc.exe
-*/
-#include <iostream>
-#include <cmath>
-#include <vector>
-#include <string>
-#include <cmath>
-#include "../../fct_error/fct_error.hpp"
+#include "calculator.hpp"
 
 using namespace std;
-
-bool IsANumber(char c);
-bool IsAClassicOperator(char c);
-bool IsASpecialOperator(char c);
-bool split_nb(vector<double>* Vnb,string chaine);
-bool split_op(vector<char>* op,string chaine);
-bool to_double(double* db,string str);
-double fact(double nb);
-void manage_pow(vector<double>* nb,vector<char> *op,int index);
-double manage_fact(double nb,vector<char> *op,int index);
-double manage_sqrt(double nb,vector<char> *op,int index);
-bool check_accepted_char(string str, string accepted_char);
-
-string handle_overflow(string exp);
-string ressearch_parenthese(string chaine);
-bool calculator(string exp,double *tmp);
-
-int main(int argc, char const *argv[])
-{
-    
-    return 0;
-}
 
 /**
  * @brief return if a char c is a number or not
