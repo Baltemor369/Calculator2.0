@@ -6,8 +6,7 @@ g++ ..\fct_4_error\fct_error.cpp .\calculator2.cpp -o ..\bin\calc.exe
 
 /**
  * TASK LIST :
- * + handle_overflow
- * + make function for #
+ * 
  * 
  * op : + - * /  ! ^ # 
  * /!\english notation : 128.51 
@@ -18,7 +17,8 @@ g++ ..\fct_4_error\fct_error.cpp .\calculator2.cpp -o ..\bin\calc.exe
 #include <vector>
 #include <string>
 #include <cmath>
-#include "../fct_4_error/fct_error.hpp"
+#include <ctime>
+#include "../../fct_error/fct_error.hpp"
 
 using namespace std;
 
@@ -40,198 +40,7 @@ bool calculator(string exp,double *tmp);
 
 int main(int argc, char const *argv[])
 {
-    double tmp_db;
-    string tmp_str;
-    
-    //TEST IsANumber
-    string test("10^3+(!(2.5-!!3)+#4)*5^2/(#6.2*!7)+!8+9");
-    int score(0);
-    for (int i = 0; i < test.size(); i++)
-    {
-        if (IsANumber(test.at(i)))
-        {
-            ++score;
-        }
-    }
-    if (score==14)
-    {
-        cout<<"test IsANumber SUCCEEDED" <<endl;
-    }else{
-        cout<<"test IsANumber FAILED : score="<<score<<endl;
-    }
-    score=0;
-    
-    //TEST IsAClassicOperator
-    for (int i = 0; i < test.size(); i++)
-    {
-        if (IsAClassicOperator(test.at(i)))
-        {
-            ++score;
-        }
-    }
-    if (score==8)
-    {
-        cout<<"test IsAClassicOperator SUCCEEDED" <<endl;
-    }else{
-        cout<<"test IsAClassicOperator FAILED : score="<<score<<endl;
-    }
-    score=0;
-    
-    //TEST IsASpecialOperator
-    for (int i = 0; i < test.size(); i++)
-    {
-        if (IsASpecialOperator(test.at(i)))
-        {
-            ++score;
-        }
-    }
-    if (score==9)
-    {
-        cout<<"test IsASpecialOperator SUCCEEDED" <<endl;
-    }else{
-        cout<<"test IsASpecialOperator FAILED: score="<<score<<endl;
-    }
-    score=0;
-
-    //TEST split_nb
-    vector<double> nb;
-    split_nb(&nb,"2.5-!!3");
-    if (nb.size()==2)
-    {
-        cout<<"test split_nb SUCCEEDED" <<endl;
-    }else{
-        cout<<"test split_nb FAILED : nb size="<<nb.size()<<endl;
-        for (size_t i = 0; i < nb.size(); i++)
-        {
-            cout<<"=>"<<nb.at(i)<<endl;
-        }
-    }
-
-    //TEST split_op
-    vector<char> op;
-    split_op(&op,test);
-    if (op.size()==17)
-    {
-        cout<<"test split_op SUCCEEDED" <<endl;
-    }else{
-        cout<<"test split_op FAILED : op size="<<op.size()<<endl;
-        for (size_t i = 0; i < op.size(); i++)
-        {
-            cout<<"=>"<<op.at(i)<<endl;
-        }
-    }
-    
-    //TEST to_double
-    for (double i = 95; i <= 105; i+=0.5)
-    {
-        double tmp(i);
-        to_double(&tmp_db,"0000"+to_string(tmp)+"000");
-        tmp_db-=2;
-        if (tmp_db==tmp-2)
-        {
-            ++score;
-        }
-    }
-    if (score==(105-95)/0.5+1)
-    {
-        cout<<"test to_double SUCCEEDED" <<endl;
-    }else{
-        cout<<"test to_double FAILED : score="<<score<<endl;
-    }
-    
-
-    //TEST fact
-    tmp_db=fact(6);
-    if (tmp_db==720)
-    {
-        cout<<"test fact SUCCEEDED" <<endl;
-    }else{
-        cout<<"test fact FAILED : !5="<<tmp_db<<endl;
-    }
-
-    //TEST manage_pow
-    vector<double> vnb;
-    vnb.push_back(3);
-    vnb.push_back(2);
-    vnb.push_back(4);
-    vector<char> vchar;
-    vchar.push_back('^');
-    vchar.push_back('^');
-    manage_pow(&vnb,&vchar,0);
-    if (vnb.at(0)==pow(3,pow(2,4)))
-    {
-        cout<<"test manage_pow SUCCEEDED" <<endl;
-    }else{
-        cout<<"test manage_pow FAILED : "<<vnb.at(0)<<endl;
-    }
-    vnb.clear();
-    vchar.clear();
-
-    //TEST manage_fact
-    tmp_db=3;
-    vchar.push_back('!');
-    vchar.push_back('!');
-
-    if (manage_fact(tmp_db,&vchar,0)==fact(fact(3)))
-    {
-        cout<<"test manage_fact SUCCEEDED" <<endl;
-    }else{
-        cout<<"test manage_fact FAILED : "<<manage_fact(tmp_db,&vchar,0)<<endl;
-    }
-    vchar.clear();
-
-    //TEST manage_sqrt
-    tmp_db=81;
-    
-    vchar.push_back('#');
-    vchar.push_back('#');
-
-    if (manage_sqrt(tmp_db,&vchar,0)==sqrt(sqrt(81)))
-    {
-        cout<<"test manage_sqrt SUCCEEDED" <<endl;
-    }else{
-        cout<<"test manage_sqrt FAILED : "<<manage_sqrt(tmp_db,&vchar,0)<<"="<<sqrt(sqrt(81))<<endl;
-    }
-    
-    //TEST handle_overflow
-    string exp("");
-    tmp_str=handle_overflow(exp);
-    if (tmp_str==test)
-    {
-        cout<<"test handle_overflow SUCCEEDED" <<endl;
-    }else{
-        cout<<"test handle_overflow FAILED : "<<exp<<"=>"<<tmp_str<<endl;
-    }
-    
-
-    //TEST ressearch_parenthese
-    tmp_str=ressearch_parenthese(test);
-    if (tmp_str=="!(2.5-!!3)+#4")
-    {
-        cout<<"test ressearch_parenthese SUCCEEDED"<<endl;
-    }else{
-        cout<<"test ressearch_parenthese FAILED : "<<tmp_str<<endl;
-    }
-
-    //TEST check_accepted_char
-
-    if (check_accepted_char("12.","0123456789."))
-    {
-        cout<<"test check_accepted_char SUCCEEDED"<<endl;
-    }else{
-        cout<<"test check_accepted_char FAILED "<<endl;
-    }
-    
-
-    
-    //TEST calculator
-    test="8^2+(9-4)*#9-!2";
-    if (calculator(test,&tmp_db) and tmp_db==pow(8,2)+(9-4)*sqrt(9)-fact(2))
-    {
-        cout<<"test calculator SUCCEEDED" <<endl;
-    }else{
-        cout<<"test calculator FAILED : "<<test<<"="<<tmp_db<<endl;
-    }
+    srand(time(NULL));
     
     return 0;
 }
@@ -413,27 +222,11 @@ bool to_double(double* db,string str){
         return false;
     }
     //check every char is accepted
-    
     if (!check_accepted_char(str,"0123456789."))
     {
         return false;
     }
 
-    //delete useless 0 at the begin and the end of the chaine
-    int ind(0);
-    while (str.at(ind)=='0')
-    {
-        str.erase(str.begin());
-    }
-    ind=str.size()-1;
-    while(str.at(ind)=='0')
-    {
-        str.erase(str.begin()+ind);
-        --ind;
-    }
-    if(str.at(ind)=='.'){
-        str.erase(str.begin()+ind);
-    }
     //get integer part size
     for (size_t i = 0; i < str.size(); i++)
     {
@@ -443,6 +236,26 @@ bool to_double(double* db,string str){
             str.erase(str.begin()+i);
         }
     }
+    //delete useless 0 at the begin and the end of the chaine
+    if (size_int>0)
+    {
+        int ind(0);
+        while (str.at(ind)=='0')
+        {
+            str.erase(str.begin());
+        }
+        ind=str.size()-1;
+        while(str.at(ind)=='0')
+        {
+            str.erase(str.begin()+ind);
+            --ind;
+        }
+        if(str.at(ind)=='.'){
+            str.erase(str.begin()+ind);
+        }
+    }
+    
+   
     //convert the string
     for (size_t i = 0; i < str.size(); i++)
     {
@@ -732,7 +545,7 @@ bool calculator(string exp,double *tmp){
             i-0;
         }else if (op.at(i)=='#')
         {
-            manage_sqrt(nb.at(i),&op,i);
+            nb.at(i)=manage_sqrt(nb.at(i),&op,i);
             i-=0;
         }
     }
