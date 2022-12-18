@@ -3,21 +3,11 @@ location : .\calculator\src\
 compile command : 
 g++ ..\fct_4_error\fct_error.cpp .\calculator2.cpp -o ..\bin\calc.exe
 */
-
-/**
- * TASK LIST :
- * 
- * 
- * op : + - * /  ! ^ # 
- * /!\english notation : 128.51 
-*/
-
 #include <iostream>
 #include <cmath>
 #include <vector>
 #include <string>
 #include <cmath>
-#include <ctime>
 #include "../../fct_error/fct_error.hpp"
 
 using namespace std;
@@ -40,7 +30,6 @@ bool calculator(string exp,double *tmp);
 
 int main(int argc, char const *argv[])
 {
-    srand(time(NULL));
     
     return 0;
 }
@@ -303,7 +292,12 @@ bool to_double(double* db,string str){
     return true;
 }
 
-
+/**
+ * @brief 
+ * 
+ * @param exp <string>the expression which needs to be corrected.
+ * @return the string corrected.
+ */
 string handle_overflow(string exp){
     //delete non accepted_char
     string accept_char="0123456789.()+-*/!#^";
@@ -467,6 +461,13 @@ void manage_pow(vector<double> *nb,vector<char> *op,int index){
     op->erase(op->begin()+index);
 }
 
+/**
+ * @brief manage sequence of factorial like "!!3=!6=120", calcul and arrange the vectors
+ * 
+ * @param nb a vector type <double> with every member of the calcul
+ * @param op a vector type <char> with every operator of the calcul
+ * @param index index of the first '!' finded.
+ */
 double manage_fact(double nb,vector<char> *op,int index){
     if (index<op->size()-1 and op->at(index+1)=='!')
     {
@@ -476,6 +477,13 @@ double manage_fact(double nb,vector<char> *op,int index){
     return fact(nb);
 }
 
+/**
+ * @brief manage sequence of sqrt like "##81=#9=3", calcul and arrange the vectors
+ * 
+ * @param nb a vector type <double> with every member of the calcul
+ * @param op a vector type <char> with every operator of the calcul
+ * @param index index of the first '#' finded.
+ */
 double manage_sqrt(double nb,vector<char> *op,int index){
     if (index<op->size()-1 and op->at(index+1)=='#')
     {
@@ -485,6 +493,14 @@ double manage_sqrt(double nb,vector<char> *op,int index){
     return sqrt(nb);
 }
 
+/**
+ * @brief verify if all char of the string are accepted.
+ * 
+ * @param str <string> need to be verified.
+ * @param accepted_char <string> of char accepted.
+ * @return true if every char are accepted,
+ * @return false if not.
+ */
 bool check_accepted_char(string str, string accepted_char){
     bool check(false);
     for (size_t i = 0; i < str.size(); i++)
